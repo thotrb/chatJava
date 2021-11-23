@@ -65,9 +65,10 @@ public class ClientThread
                             socOut.println("Tapez : \n" +
                                     "-1 Pour créer un groupe \n" +
                                     "-2 Pour supprimer un groupe \n" +
-                                    "-3 Rejoindre un groupe");
+                                    "-3 Rejoindre un groupe \n" +
+                                    "-4 Afficher la liste des utilisateurs connectés");
                             if(this.groupeEnvoie != ""){
-                                socOut.println("-4 Quitter le groupe " + this.groupeEnvoie);
+                                socOut.println("-5 Quitter le groupe " + this.groupeEnvoie);
                             }
                             break;
 
@@ -116,9 +117,21 @@ public class ClientThread
                             this.groupeEnvoie ="";
                             server.initialiserConversation(this);
                             break;
+/**
+                        case ("leaveGroup"):
+                            socOut.println("Vous avez quitté le groupe : " + this.groupeEnvoie);
+                            socOut.println("Attention, vos messages sont désormais publiques.");
+                            this.groupeEnvoie ="";
+                            server.initialiserConversation(this);
+                            break;**/
+
+
                         default:
                             this.server.transmettreMessage(new Date(), pseudo + " : " + line, groupeEnvoie);
                             break;
+
+
+
                     }
                 }
 

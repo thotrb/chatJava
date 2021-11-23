@@ -91,6 +91,14 @@ public class ClientThreadEcriture extends Thread {
 
                         } else if (commande.equals("4")) {
                             if (derniereCommande.equals("menuSelector")) {
+                                socOut.println("0_showUsers");
+                                derniereCommande = "";
+                            } else {
+                                envoyerMessage(commande);
+                            }
+
+                        } else if (commande.equals("5")) {
+                            if (derniereCommande.equals("menuSelector")) {
                                 socOut.println("0_leaveGroup");
                                 derniereCommande = "";
                             } else {
