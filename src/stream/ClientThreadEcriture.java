@@ -34,6 +34,7 @@ public class ClientThreadEcriture extends Thread {
             while (true) {
 
                 if (!aEnvoyerPseudo) {
+
                     System.out.println("Veuillez saisir votre pseudo : ");
                     String pseudo = this.stdIn.readLine();
                     while(pseudo.equals("\n") || pseudo.equals("")  ){
@@ -55,7 +56,7 @@ public class ClientThreadEcriture extends Thread {
                     if (commande.equals(".")) break;
 
                     if (commande.equals("Menu") || commande.equals("menu")) {
-                        socOut.println("0_getGroups");
+                        socOut.println("0_getMenu");
                         derniereCommande = "menuSelector";
                     } else {
                         if (commande.equals("1")) {

@@ -50,65 +50,29 @@ public class ClientThread
                     switch (commandeAEffectuer){
 
                         case ("sendPseudo") :
+                            server.initialiserConversation(this);
                             this.pseudo = teteMessage;
-                            socOut.println("Connection initialisée, vous pouvez dialoguer.");
-                            socOut.println("Tapez \"Menu\" pour accéder au menu de l'application.");
+                            server.envoyerMessageConnexionAccepte(this);
 
                             break;
 
-                        case("getGroups") :
-                            Set<String> groupes  = this.server.getListeGroupes();
-                            socOut.println("Voici la liste des groupes auxquels vous êtes inscrits : ");
-                            for(String groupe : groupes){
-                                socOut.println(groupe);
-                            }
-                            socOut.println("Tapez : \n" +
-                                    "-1 Pour créer un groupe \n" +
-                                    "-2 Pour supprimer un groupe \n" +
-                                    "-3 Rejoindre un groupe \n" +
-                                    "-4 Afficher la liste des utilisateurs connectés");
-                            if(this.groupeEnvoie != ""){
-                                socOut.println("-5 Quitter le groupe " + this.groupeEnvoie);
-                            }
+                        case("getMenu") :
+                            server.afficherMenu(this);
                             break;
 
                         case ("createGroup") :
-                            groupes = server.getListeGroupes();
-                            server.ajouterGroupe(teteMessage);
-                            socOut.println("Groupe ajouté avec succès.");
-                            socOut.println("Liste des groupes : ");
-                            for(String groupe : groupes){
-                                socOut.println(groupe);
-                            }
+                            server.rejoindreGroupe(this, teteMessage);
                             break;
                         case ("deleteGroup"):
-                            groupes = server.getListeGroupes();
-                            if(server.getListeGroupes().contains(teteMessage) && !teteMessage.equals("")){
-                                server.supprimerGroupe(teteMessage);
-                                socOut.println("Groupe supprimé avec succès.");
-                                socOut.println("Liste des groupes : ");
-                                for(String groupe : groupes){
-                                    socOut.println(groupe);
-                                }
-                            }else{
-                                socOut.println("Le groupe que vous souhaitez supprimer n'existe pas dans la liste : \n");
-                                for(String groupe : groupes){
-                                    socOut.println(groupe);
-                                }
-                            }
+                            server.supprimerGroupe(this, teteMessage);
                             break;
                         case ("joinGroup"):
-                            groupes = server.getListeGroupes();
                             if(server.getListeGroupes().contains(teteMessage)) {
                                 socOut.println("Vous communquez désormais avec le groupe: " + teteMessage);
                                 groupeEnvoie = teteMessage;
                                 server.initialiserConversation(this);
                             }else{
-                                socOut.println("Le groupe que vous souhaitez rejoindre n'existe pas dans la liste: ");
-                                for(String groupe : groupes){
-                                    socOut.println(groupe);
-                                }
-                                socOut.println("Attention, vos messages sont publiques.");
+                                server.envoyerMessageErreurGroupeInexistant(this);
                             }
                             break;
                         case ("leaveGroup"):
@@ -117,13 +81,10 @@ public class ClientThread
                             this.groupeEnvoie ="";
                             server.initialiserConversation(this);
                             break;
-/**
-                        case ("leaveGroup"):
-                            socOut.println("Vous avez quitté le groupe : " + this.groupeEnvoie);
-                            socOut.println("Attention, vos messages sont désormais publiques.");
-                            this.groupeEnvoie ="";
-                            server.initialiserConversation(this);
-                            break;**/
+
+                        case ("showUsers"):
+                            server.envoyerListeDesPersonnesConnectees(this);
+                            break;
 
 
                         default:
@@ -150,6 +111,23 @@ public class ClientThread
 
     public void setDerniereDateDeReception(Date dateDeCreation) {
         this.derniereDateDeReception = dateDeCreation;
+    }
+
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientThread that = (ClientThread) o;
+        return Objects.equals(pseudo, that.pseudo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pseudo);
     }
 
     public String getGroupeEnvoie() {
