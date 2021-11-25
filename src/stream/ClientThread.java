@@ -35,7 +35,7 @@ public class ClientThread
      **/
     public void run() {
         try {
-            BufferedReader socIn = null;
+            BufferedReader socIn;
             socIn = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
             PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
@@ -46,7 +46,7 @@ public class ClientThread
                 if(line.split("_").length > 1){
                     commandeAEffectuer = line.split("_")[line.split("_").length-1];
                 }
-                if(teteMessage != ""){
+                if(!teteMessage.equals("")){
                     switch (commandeAEffectuer){
 
                         case ("sendPseudo") :
@@ -68,7 +68,7 @@ public class ClientThread
                             break;
                         case ("joinGroup"):
                             if(server.getListeGroupes().contains(teteMessage)) {
-                                socOut.println("Vous communquez désormais avec le groupe: " + teteMessage);
+                                socOut.println("Vous communiquez désormais avec le groupe: " + teteMessage);
                                 groupeEnvoie = teteMessage;
                                 server.initialiserConversation(this);
                             }else{
@@ -86,6 +86,9 @@ public class ClientThread
                             server.envoyerListeDesPersonnesConnectees(this);
                             break;
 
+                        case ("showGroup"):
+                            server.afficherListeGroupes(this);
+                            break;
 
                         default:
                             this.server.transmettreMessage(new Date(), pseudo + " : " + line, groupeEnvoie);

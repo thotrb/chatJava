@@ -59,56 +59,69 @@ public class ClientThreadEcriture extends Thread {
                         socOut.println("0_getMenu");
                         derniereCommande = "menuSelector";
                     } else {
-                        if (commande.equals("1")) {
-                            if (derniereCommande.equals("menuSelector")) {
-                                System.out.println("Nom du groupe à ajouter : ");
-                                String nomGroupe = this.stdIn.readLine();
-                                socOut.println(nomGroupe + "_createGroup");
-                                derniereCommande = "";
+                        switch (commande) {
+                            case "1":
+                                if (derniereCommande.equals("menuSelector")) {
+                                    System.out.println("Nom du groupe à ajouter : ");
+                                    String nomGroupe = this.stdIn.readLine();
+                                    socOut.println(nomGroupe + "_createGroup");
+                                    derniereCommande = "";
 
-                            } else {
+                                } else {
+                                    envoyerMessage(commande);
+                                }
+                                break;
+                            case "2":
+                                if (derniereCommande.equals("menuSelector")) {
+                                    System.out.println("Nom du groupe à supprimer : ");
+                                    String nomGroupe = this.stdIn.readLine();
+                                    socOut.println(nomGroupe + "_deleteGroup");
+                                    derniereCommande = "";
+
+                                } else {
+                                    envoyerMessage(commande);
+                                }
+                                break;
+                            case "3":
+                                if (derniereCommande.equals("menuSelector")) {
+                                    System.out.println("Nom du groupe à rejoindre : ");
+                                    String nomGroupe = this.stdIn.readLine();
+                                    socOut.println(nomGroupe + "_joinGroup");
+                                    derniereCommande = "";
+
+                                } else {
+                                    envoyerMessage(commande);
+                                }
+
+                                break;
+                            case "4":
+                                if (derniereCommande.equals("menuSelector")) {
+                                    socOut.println("0_showUsers");
+                                    derniereCommande = "";
+                                } else {
+                                    envoyerMessage(commande);
+                                }
+
+                                break;
+                            case "5":
+                                if (derniereCommande.equals("menuSelector")) {
+                                    socOut.println("0_showGroup");
+                                    derniereCommande = "";
+                                } else {
+                                    envoyerMessage(commande);
+                                }
+                                break;
+                            case "6":
+                                if (derniereCommande.equals("menuSelector")) {
+                                    socOut.println("0_leaveGroup");
+                                    derniereCommande = "";
+                                } else {
+                                    envoyerMessage(commande);
+                                }
+                                break;
+                            default:
                                 envoyerMessage(commande);
-                            }
-                        } else if (commande.equals("2")) {
-                            if (derniereCommande.equals("menuSelector")) {
-                                System.out.println("Nom du groupe à supprimer : ");
-                                String nomGroupe = this.stdIn.readLine();
-                                socOut.println(nomGroupe + "_deleteGroup");
-                                derniereCommande = "";
-
-                            } else {
-                                envoyerMessage(commande);
-                            }
-                        } else if (commande.equals("3")) {
-                            if (derniereCommande.equals("menuSelector")) {
-                                System.out.println("Nom du groupe à rejoindre : ");
-                                String nomGroupe = this.stdIn.readLine();
-                                socOut.println(nomGroupe + "_joinGroup");
-                                derniereCommande = "";
-
-                            } else {
-                                envoyerMessage(commande);
-                            }
-
-                        } else if (commande.equals("4")) {
-                            if (derniereCommande.equals("menuSelector")) {
-                                socOut.println("0_showUsers");
-                                derniereCommande = "";
-                            } else {
-                                envoyerMessage(commande);
-                            }
-
-                        } else if (commande.equals("5")) {
-                            if (derniereCommande.equals("menuSelector")) {
-                                socOut.println("0_leaveGroup");
-                                derniereCommande = "";
-                            } else {
-                                envoyerMessage(commande);
-                            }
-
-
-                        } else {
-                            envoyerMessage(commande);
+                                break;
                         }
 
 

@@ -1,20 +1,11 @@
 package stream;
 
 import java.io.*;
-import java.net.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.*;
-
-import java.lang.*;
-import java.util.*;
-import java.util.stream.*;
-import java.util.stream.Collectors;
 
 public class EchoServerMultiThreaded {
 
@@ -23,8 +14,8 @@ public class EchoServerMultiThreaded {
 
     private HashMap<String, HashMap<Long, String>> messagesParGroupe;
 
-    public EchoServerMultiThreaded() throws FileNotFoundException {
-        clients = new ArrayList<ClientThread>();
+    public EchoServerMultiThreaded() {
+        clients = new ArrayList<>();
         //messagesEchanges = new HashMap<>();
 
         messagesParGroupe = new HashMap<>();
@@ -33,24 +24,29 @@ public class EchoServerMultiThreaded {
 
     }
 
-    public void initialiserHashMap() throws IOException, ParseException {
+    public void initialiserHashMap() throws IOException {
         BufferedReader buff = new BufferedReader(new FileReader(NOM_FICHIER_SAUVEGARDE));
         String line;
         while ((line = buff.readLine()) != null) {
             String message = line;
             line = buff.readLine();
             SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-            Date dateMessage = formater.parse(line);
-            SimpleDateFormat formater2 = new SimpleDateFormat("'le' dd/MM/yyyy 'à' hh:mm:ss");
-            //messagesEchanges.put(dateMessage.getTime(), message + " (" +  formater2.format(dateMessage)+ ")");
+            try{
+                Date dateMessage = formater.parse(line);
+                SimpleDateFormat formater2 = new SimpleDateFormat("'le' dd/MM/yyyy 'à' hh:mm:ss");
+                //messagesEchanges.put(dateMessage.getTime(), message + " (" +  formater2.format(dateMessage)+ ")");
 
-            String groupeMessage = message.split(" ")[0];
-            if (messagesParGroupe.containsKey(groupeMessage)) {
-                messagesParGroupe.get(groupeMessage).put(dateMessage.getTime(), message + " (" + formater2.format(dateMessage) + ")");
-            } else {
-                HashMap<Long, String> messages = new HashMap<>();
-                messages.put(dateMessage.getTime(), message + " (" + formater2.format(dateMessage) + ")");
-                messagesParGroupe.put(groupeMessage, messages);
+                String groupeMessage = message.split(" ")[0];
+                if (messagesParGroupe.containsKey(groupeMessage)) {
+                    messagesParGroupe.get(groupeMessage).put(dateMessage.getTime(), message + " (" + formater2.format(dateMessage) + ")");
+                } else {
+                    HashMap<Long, String> messages = new HashMap<>();
+                    messages.put(dateMessage.getTime(), message + " (" + formater2.format(dateMessage) + ")");
+                    messagesParGroupe.put(groupeMessage, messages);
+                }
+            }
+            catch(Exception ex){
+                System.out.println(ex.getMessage());
             }
         }
 
@@ -69,7 +65,7 @@ public class EchoServerMultiThreaded {
      *
      * @param args port
      **/
-    public static void main(String args[]) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
         ServerSocket listenSocket;
         EchoServerMultiThreaded serv = new EchoServerMultiThreaded();
         serv.initialiserHashMap();
@@ -175,9 +171,10 @@ public class EchoServerMultiThreaded {
                 "-1 Pour créer un groupe \n" +
                 "-2 Pour supprimer un groupe \n" +
                 "-3 Rejoindre un groupe \n" +
-                "-4 Afficher la liste des utilisateurs connectés");
+                "-4 Afficher la liste des utilisateurs connectés \n" +
+                "-5 Afficher la liste des groupes");
         if (!client.getGroupeEnvoie().equals("")) {
-            socOut.println("-5 Quitter le groupe " + client.getGroupeEnvoie());
+            socOut.println("-6 Quitter le groupe " + client.getGroupeEnvoie());
         }
 
     }
@@ -199,7 +196,7 @@ public class EchoServerMultiThreaded {
 
     public void initialiserConversation(ClientThread client) throws IOException {
         PrintStream socOut = new PrintStream(client.getClientSocket().getOutputStream());
-        String message = "";
+        String message;
 
         if (!messagesParGroupe.containsKey(client.getGroupeEnvoie())) {
             HashMap<Long, String> messages = new HashMap<>();
@@ -208,9 +205,8 @@ public class EchoServerMultiThreaded {
 
         Map sortedMap = new TreeMap(messagesParGroupe.get(client.getGroupeEnvoie()));
         Set set = sortedMap.entrySet();
-        Iterator ite = set.iterator();
-        while (ite.hasNext()) {
-            Map.Entry me = (Map.Entry) ite.next();
+        for (Object obj : set) {
+            Map.Entry me = (Map.Entry) obj;
             message = (String) me.getValue();
             socOut.println(message);
         }
