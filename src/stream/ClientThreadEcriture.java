@@ -2,15 +2,37 @@ package stream;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
-import java.util.Objects;
 
+/**
+ * Cette classe est un thread qui permet d'implémenter les fonctions d'écriture pour un client
+ */
 public class ClientThreadEcriture extends Thread {
 
-    private PrintStream socOut;
-    private BufferedReader stdIn;
-    private boolean aEnvoyerPseudo;
-    private String derniereCommande, line, nomGroupe;
+    /**
+     * Stream pour l'écriture des messages
+     */
+    private final PrintStream socOut;
 
+    /**
+     * Données entrantes du terminal (saisies par l'utilisateur)
+     */
+    private final BufferedReader stdIn;
+
+    /**
+     * false tant que le client n'a pas saisie son pseudo
+     */
+    private boolean aEnvoyerPseudo;
+
+    /**
+     * Dernier choix dans le menu demandé
+     */
+    private String derniereCommande;
+
+    /**
+     * Constructeur
+     * @param scO pour l'écriture des messages
+     * @param stdI données entrantes du terminal
+     */
     public ClientThreadEcriture(PrintStream scO, BufferedReader stdI) {
         this.socOut = scO;
         this.stdIn = stdI;
@@ -18,18 +40,22 @@ public class ClientThreadEcriture extends Thread {
         this.derniereCommande = "";
     }
 
+    /**
+     * Permet d'envoyer le choix de menu demandée
+     * @param commande est le numéro dans le menu saisi par l'utilisateur
+     */
     private void envoyerMessage(String commande) {
-        line = commande;
-        socOut.println(line);
+        socOut.println(commande);
         derniereCommande = "";
     }
 
+    /**
+     * Permet le lancement du thread
+     */
     public void run() {
-
 
         try {
             String commande;
-
 
             while (true) {
 
@@ -123,11 +149,7 @@ public class ClientThreadEcriture extends Thread {
                                 envoyerMessage(commande);
                                 break;
                         }
-
-
                     }
-
-
                 }
             }
 

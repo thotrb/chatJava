@@ -1,37 +1,40 @@
 package stream;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
-public class ClientThread
-        extends Thread {
+/**
+ * Cette classe est un thread représentant un client.
+ */
+public class ClientThread extends Thread {
 
-    private Socket clientSocket;
-    private EchoServerMultiThreaded server;
-    private Date derniereDateDeReception;
+    private final Socket clientSocket;
+    private final EchoServerMultiThreaded server;
     private String groupeEnvoie;
     private String pseudo;
 
-
+    /**
+     * Constructeur
+     * @param s socket
+     * @param se serveur
+     */
     ClientThread(Socket s, EchoServerMultiThreaded se) {
         this.clientSocket = s;
         this.server = se;
-        this.derniereDateDeReception = new Date();
         this.groupeEnvoie = "";
         this.pseudo = "";
     }
-
 
     public Socket getClientSocket() {
         return clientSocket;
     }
 
     /**
-     * receives a request from client then sends an echo to the client
+     * Reçoit et gére les requêtes du client.
      **/
     public void run() {
         try {
@@ -93,12 +96,8 @@ public class ClientThread
                         default:
                             this.server.transmettreMessage(new Date(), pseudo + " : " + line, groupeEnvoie);
                             break;
-
-
-
                     }
                 }
-
 
             }
         } catch (Exception e) {
@@ -106,15 +105,6 @@ public class ClientThread
         }
     }
 
-
-
-    public Date getDerniereDateDeReception() {
-        return derniereDateDeReception;
-    }
-
-    public void setDerniereDateDeReception(Date dateDeCreation) {
-        this.derniereDateDeReception = dateDeCreation;
-    }
 
     public String getPseudo() {
         return pseudo;
