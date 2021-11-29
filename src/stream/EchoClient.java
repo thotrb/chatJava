@@ -1,18 +1,38 @@
 package stream;
 
-import java.io.*;
-import java.net.*;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
+/**
+ * Classe représentant un client
+ */
 public class EchoClient {
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
-        Socket echoSocket = null;
+        /**
+         *  La socket établie entre le client et le serveur
+         */
+        Socket echoSocket;
+
+        /**
+         * Stream pour l'écriture des messages
+         */
         PrintStream socOut = null;
+
+        /**
+         * Données entrantes du terminal (saisies par l'utilisateur)
+         */
         BufferedReader stdIn = null;
+
+        /**
+         * Données entrantes de la socket
+         */
         BufferedReader socIn = null;
 
 
@@ -45,13 +65,6 @@ public class EchoClient {
 
         ClientThreadEcriture ctEcriture = new ClientThreadEcriture(socOut, stdIn);
         ctEcriture.start();
-
-        /**
-        socIn.close();
-        socOut.close();
-        stdIn.close();
-        echoSocket.close();
-         **/
 
     }
 
